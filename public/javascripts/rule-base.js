@@ -4,7 +4,7 @@
 
 function defaultBase(count , callback) {
         $.ajax({
-            url: "http://192.168.0.12:8081/rulebase",
+            url: "http://192.168.0.12:8081/kmeans",
             type: "GET",
             contentType: false,
             processData: false,

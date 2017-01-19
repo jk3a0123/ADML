@@ -4,11 +4,10 @@
 function loadCSV() {
     $.ajax({
        url : "http://localhost:8080/fileData",
-       contentType:false,
-       processData:false,
        type : "get",
        dataType : "text",
        success : function (result) {
+           console.log("...........");
            console.log(result);
        }
     });
