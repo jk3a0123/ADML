@@ -7,7 +7,7 @@ var ajaxMD = require("../public/javascripts/ajax-module.js");
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    fileIO.localWrite();
+    // fileIO.localWrite();
     res.render('ad.html', { title: 'Express' });
 });
 
