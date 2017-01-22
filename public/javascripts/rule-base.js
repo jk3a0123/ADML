@@ -46,7 +46,7 @@ function defaultBase(count , callback) {
 }
 
 var callfile = function () {
-    var fileIO = require('./fileio.js');
+    var fileIO = require('./../modules/fileio.js');
     console.log(fileIO());
 };
 

@@ -17,8 +17,6 @@
     <script type="text/javascript" src="javascripts/face-api.js"></script>
     <script type="text/javascript" src="javascripts/rule-base.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script type="text/javascript" src="javascripts/call-file.js"></script>
-    <!--<script type="text/javascript" src="javascripts/testLOg.js"></script>-->
 
     <title>Welcome kb141 ad</title>
     <style>
@@ -39,11 +37,13 @@
         <div class="col-md-4">
             <h1 id="log"></h1>
         </div>
+        <img id="img">
+
     </div>
 </div>
 <script>
     $(document).ready(function () {
-
+        callimg();
         var count;
         var rule ;
         var video = document.getElementById("video");
@@ -55,14 +55,6 @@
         var currentTime ;
         var startTime ;
         var endTime ;
-        count=0;
-        if(count==0){
-            defaultBase(count,function (data) {
-                console.log("data...");
-                console.log(data);
-                rule = data;
-            });
-        }
         tracker.setInitialScale(2);
         tracker.setStepSize(2);
         tracker.setEdgesDensity(0.1);
@@ -125,14 +117,11 @@
              });
          });
 
-
-
          // calc second function...
-         var calcSec = function (startTime) {
+        function calcSec(startTime) {
              var newtime = new Date();
              return newtime.setTime(newtime.getTime() - startTime);
-         };
-
+         }
          // algorism function
          function callRule(detect , emotion , rule) {
              console.log("rule called.....");
@@ -140,9 +129,24 @@
          }
      }
 
+
+     function callimg() {
+         $.ajax({
+             url : "http://localhost:8080/adfile",
+             dataType : "text",
+             success : function (data) {
+                 $('#img').attr('src' , data);
+
+             }
+         })
+     }
+
+
+
+
+
+
     });
-
-
 </script>
 </body>
 </html>
