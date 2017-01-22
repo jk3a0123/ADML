@@ -6,7 +6,7 @@ var jsdom = require("jsdom");
 
 var ajaxMD = (function () {
     function callAjax(obj) {
-        jsdom.env("" , ["https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"] , function (err , window) {
+        jsdom.env("" , ["https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"] , function ( err , window) {
             var $ = window.$;
             console.log("......");
             $.support.cors = true;
