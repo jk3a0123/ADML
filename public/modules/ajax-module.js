@@ -20,7 +20,7 @@ var ajaxMD = (function () {
             });
         });
     }
-    return {callAjax : callAjax};
+    return {callAjax :  callAjax};
 })();
 
 module.exports = ajaxMD;
