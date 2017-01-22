@@ -55,7 +55,7 @@ var fileIO = (function () {
             }
 
 
-            console.log(col[1][1]);
+            console.log(col[1][1] );
 
             var data = fs.readFileSync("/Users/juyoungjung/Downloads/adimages/"+col[1][1]).toString("base64");
 
