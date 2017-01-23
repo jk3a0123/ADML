@@ -17,6 +17,7 @@
     <script type="text/javascript" src="javascripts/face-api.js"></script>
     <script type="text/javascript" src="javascripts/rule-base.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/front.to.front-ajax.js"></script>
 
     <title>Welcome kb141 ad</title>
     <style>
@@ -31,19 +32,27 @@
     <div class="row">
         <div class="col-md-4"></div>
         <div class="col-md-4">
-            <video id="video" width="480" height="360" preload autoplay loop muted ></video>
-            <canvas id="canvas" width="480" height="360"></canvas>
         </div>
         <div class="col-md-4">
             <h1 id="log"></h1>
         </div>
-        <img id="img">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <video id="video" width="480" height="360" preload autoplay loop muted ></video>
+            <canvas id="canvas" width="480" height="360"></canvas>
+        </div>
+    </div>
+        <img id="img" width=600" height="600px">
+        <video  autoplay preload controls  width="480" height="360" id="advideo"></video>
 
     </div>
 </div>
 <script>
     $(document).ready(function () {
-        callimg();
+//        callimg();
+        callVideo("anger_school.mp4");
         var count;
         var rule ;
         var video = document.getElementById("video");
@@ -103,11 +112,17 @@
                                  console.log("emotion called.......");
                                  emotion = data;
                                  console.log(emotion);
+
                                  if(emotion != null){
-                                     $("#log").html(detect.age +":"+ detect.gender + ":" + emotion.happiness);
+                                     var age = Math.floor(detect.age/10)*10;
+                                     $("#log").html("연령대 :" + age.toString() +
+                                         " 성별 :"+ detect.gender + " 행복감 :" + emotion.happiness);
                                      startTime = time.getTime();
                                      endTime = calcSec(startTime)/1000;
-                                     return callRule(detect , emotion , rule);
+
+
+
+//                                     return callRule(detect , emotion , rule);
                                  }
                              });
                          },1000);
@@ -127,24 +142,11 @@
              console.log("rule called.....");
              ruleBase(detect , emotion , rule);
          }
+
+         // call video
+
+
      }
-
-
-     function callimg() {
-         $.ajax({
-             url : "http://localhost:8080/adfile",
-             dataType : "text",
-             success : function (data) {
-                 $('#img').attr('src' , data);
-
-             }
-         })
-     }
-
-
-
-
-
 
     });
 </script>

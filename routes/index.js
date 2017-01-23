@@ -22,8 +22,29 @@ router.get('/write' , function (req , res , next) {
 router.get('/adfile' , function (req , res , next) {
    fileIO.adFileImgRead(function (img) {
        console.log(img);
+
        res.send(img);
    });
+});
+
+router.get('/advideo/:path' , function (req , res) {
+   var path = req.params.path;
+   console.log("......");
+   console.log(path);
+
+   res.writeHead(206 , {"Accept-Ranges" : "bytes" , "Content-Type" : "video/mp4" });
+
+    fileIO.adVideoRead(path,function (result) {
+            result.on("open" , function () {
+                result.pipe(res);
+            });
+    });
+
+   // fileIO.adVideoRead(path , function (result) {
+   //          console.log(result);
+   //          res.pipe(result);
+   //          res.end();
+   // });
 });
 
 

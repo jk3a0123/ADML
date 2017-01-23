@@ -5,6 +5,7 @@
 var fs = require("fs");
 var util = require("util");
 var mime = require("mime");
+var chunkit = require("chunkit");
 
 
 var fileIO = (function () {
@@ -40,31 +41,58 @@ var fileIO = (function () {
     function adFileImgRead(callback) {
 
             var adImgList = fs.readFileSync("/Users/juyoungjung/Downloads/list.csv");
-
             console.log(adImgList.toString());
-
-            var row = adImgList.toString().split('\n');
-
-            console.log(row);
-
+            var row = adImgList.toString().split('\n').slice(1);
+            console.log(row.length);
+            // callback return emotion insert
+            var arr = row.join().split(",");
             console.log("..........");
-            var col = new Array();
-            var arr = new Array();
-            for(var i = 0 ; i < row.length ; i ++){
-                col.push(row[i].split(','));
-            }
+            var fileUri = new Array();
+            var fileNames = new Array();
+            var count = 1;
+            var j = 0 ;
+            setInterval(function () {
+                fileNames.push(arr[j+count].slice(1,-1));
+                var data = fs.readFileSync("/Users/juyoungjung/Downloads/adimages/"+fileNames[j]).toString("base64");
+                fileUri.push(util.format("data:%s;base64,%s" , mime.lookup("/Users/juyoungjung/Downloads/adimages/"+fileNames[j]),data));
+                j++;
+                count++;
+                console.log(j);
+                if(j == row.length){
+                    clearInterval();
+                    console.log("end....");
+                    callback(fileUri);
 
-
-            console.log(col[1][1] );
-
-            var data = fs.readFileSync("/Users/juyoungjung/Downloads/adimages/"+col[1][1]).toString("base64");
-
-            var dataUri = util.format("data:%s;base64,%s" , mime.lookup("/Users/juyoungjung/Downloads/adimages/"+col[1][1]),data);
-
-            callback(dataUri);
+                }
+            },100);
     }
+    function adVideoRead(path , callback) {
+        console.log("video called...");
+        console.log(path);
 
-    return {localBaseRead : localBaseRead , localWrite : localWrite , logWrite : logWrite , adFileImgRead : adFileImgRead};
+        var stream = fs.createReadStream("/Users/juyoungjung/Downloads/ad/"+path , {encoding : "base64" , bytes : 102400 * 102400});
+        callback(stream)
+
+
+
+        // callback(videoURI);
+
+
+
+            //
+            //
+            // console.log(data);
+            // callback(data);
+
+
+        // console.log(videoData);
+        // var videoURI = util.format("data:%s;base64,%s" , mime.lookup("/Users/juyoungjung/Downloads/ad/"+videoData),data);
+   // data     console.log(videoData);
+   //
+   //      callback(videoData);
+
+    }
+    return {localBaseRead : localBaseRead , localWrite : localWrite , logWrite : logWrite , adFileImgRead : adFileImgRead , adVideoRead : adVideoRead};
 })();
 module.exports = fileIO;
     
