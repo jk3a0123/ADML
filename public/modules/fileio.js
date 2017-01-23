@@ -5,8 +5,6 @@
 var fs = require("fs");
 var util = require("util");
 var mime = require("mime");
-var chunkit = require("chunkit");
-
 
 var fileIO = (function () {
     var result;
