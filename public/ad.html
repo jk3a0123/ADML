@@ -17,13 +17,16 @@
     <script type="text/javascript" src="javascripts/face-api.js"></script>
     <script type="text/javascript" src="javascripts/rule-base.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script type="text/javascript" src="javascripts/front.to.front-ajax.js"></script>
+    <script type="text/javascript" src="javascripts/front.to.node-ajax.js"></script>
 
     <title>Welcome kb141 ad</title>
     <style>
-        video , canvas {
+        #video , canvas {
             position: absolute;
             margin-top: 50px;
+        }
+        #advideo {
+            position: absolute;
         }
     </style>
 </head>
@@ -37,49 +40,49 @@
             <h1 id="log"></h1>
         </div>
     <div class="row">
-        <div class="col-md-4"></div>
-        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <video  autoplay preload width="1080" height="720" id="advideo"></video>
+            <img id="img" width=600" height="600px">
+        </div>
+        <div class="col-md-4">
+
+        </div>
         <div class="col-md-4">
             <video id="video" width="480" height="360" preload autoplay loop muted ></video>
             <canvas id="canvas" width="480" height="360"></canvas>
         </div>
     </div>
-        <img id="img" width=600" height="600px">
-        <video  autoplay preload controls  width="480" height="360" id="advideo"></video>
+
+
 
     </div>
 </div>
 <script>
     $(document).ready(function () {
-//        callimg();
-        callVideo("anger_school.mp4");
-        var count;
-        var rule ;
+        callimg();
         var video = document.getElementById("video");
         var canvas = document.getElementById("canvas");
         var context = canvas.getContext("2d");
         var tracker = new tracking.ObjectTracker("face");
-        var detect ;
-        var emotion ;
-        var currentTime ;
-        var startTime ;
-        var endTime ;
         tracker.setInitialScale(2);
         tracker.setStepSize(2);
         tracker.setEdgesDensity(0.1);
         tracking.track("#video" , tracker , { camera: true });
 
+        var detect ;
+        var firstemotion ;
+        var secondEmotion;
+        var currentTime ;
+        var endTime ;
+        var makeTime;
+
+
         firstPicture();
-
-
-
 
 // firstpicture func......
      function firstPicture() {
          tracker.on("track" , function (event) {
-
              context.clearRect(0,0,canvas.width , canvas.height);
-
              event.data.forEach(function (rect) {
                  context.strokeStyle = "#FF4941";
                  context.strokeRect(rect.x, rect.y, rect.width, rect.height);
@@ -90,63 +93,106 @@
                  console.log(rect.width);
                  if(rect.width > 200 && event.data.length ==1){
                      var time = new Date();
-                     var makeTime = time.getFullYear() + "-" + ("0" + time.getMonth()+1).slice(-2) + "-" + ("0"+ time.getDate()).slice(-2) + " " +
+                     makeTime = time.getFullYear() + "-" + ("0" + time.getMonth()+1).slice(-2) + "-" + ("0"+ time.getDate()).slice(-2) + " " +
                          ("0" + time.getHours()).slice(-2) + ":" + ("0" + time.getMinutes()).slice(-2) + ":" + ("0" + time.getSeconds()).slice(-2);
                      tracker.removeAllListeners();
-                     currentTime = makeTime;
-
-
-                     context.drawImage(video , 0 , 0 , 320 , 240);
+                     console.log("makeTime.....");
+                     console.log(makeTime);
+                     context.drawImage(video , 0 , 0 , 480 , 360);
                      canvas.toBlob(function (blob) {
                          detectapi(blob , function (data) {
                              console.log("detected called........");
                              detect = data;
                              console.log(detect);
-                             if(emotion == null){
-                                 return false;
+                             if(firstemotion == null){
+                                 return firstPicture();
                              }
-
                          });
                          setTimeout(function () {
                              emotionapi(blob , function (data) {
                                  console.log("emotion called.......");
-                                 emotion = data;
-                                 console.log(emotion);
+                                 firstemotion = data;
+                                 console.log(firstemotion);
+                                 if(firstemotion != null){
+                                     var currentAge = Math.floor(detect.age/10)*10;
+                                     $("#log").html("연령대 :" + currentAge +
+                                         " 성별 :"+ detect.gender + " 행복감 :" + firstemotion.happiness);
 
-                                 if(emotion != null){
-                                     var age = Math.floor(detect.age/10)*10;
-                                     $("#log").html("연령대 :" + age.toString() +
-                                         " 성별 :"+ detect.gender + " 행복감 :" + emotion.happiness);
-                                     startTime = time.getTime();
-                                     endTime = calcSec(startTime)/1000;
+                                     var newtime = new Date();
+                                     currentTime = newtime.setTime(newtime.getTime() - time.getTime());
+                                     endTime = currentTime/1000;
+                                     console.log(endTime);
+                                     var path = {"age" : currentAge ,
+                                                 "gender" : detect.gender ,
+                                                 "emotion" : firstemotion};
+                                     ruleBase(path , function (result) {
+                                         if(result=="end"){
+                                             return firstPicture();
+                                         }
+                                     });
 
-
-
-//                                     return callRule(detect , emotion , rule);
                                  }
                              });
-                         },1000);
+                         },4000);
                      },"image/png" , 0);
 
                  }
              });
          });
-
-         // calc second function...
-        function calcSec(startTime) {
-             var newtime = new Date();
-             return newtime.setTime(newtime.getTime() - startTime);
-         }
-         // algorism function
-         function callRule(detect , emotion , rule) {
-             console.log("rule called.....");
-             ruleBase(detect , emotion , rule);
-         }
-
-         // call video
-
-
      }
+
+
+
+
+     // twoPicture....
+        function secondPicture() {
+            tracker.on("track" , function (event) {
+                context.clearRect(0,0,canvas.width , canvas.height);
+                event.data.forEach(function (rect) {
+                    context.strokeStyle = "#FF4941";
+                    context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+                    context.font = '11px Helvetica';
+                    context.fillStyle = "#fff";
+                    context.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
+                    context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
+                    console.log(rect.width);
+                    if(event.data.length ==1){
+                        tracker.removeAllListeners();
+                        context.drawImage(video , 0 , 0 , 480 , 360);
+                        canvas.toBlob(function (blob) {
+                                emotionapi(blob , function (data) {
+                                    console.log("emotion call  ed.......");
+                                    secondEmotion = data;
+                                    console.log(secondEmotion);
+                                    if(secondEmotion != null){
+                                        var newtime = new Date();
+                                        currentTime = newtime.setTime(newtime.getTime() - time.getTime());
+                                        endTime = currentTime/1000;
+                                        console.log(endTime);
+                                        var path = {"detect" : detect,
+                                            "emotion" : secondEmotion ,
+                                            "currentTime" : makeTime ,
+                                            "watchTime" : endTime };
+
+                                        ruleBase(path , function (result) {
+                                            if(result=="end"){
+                                                return firstPicture();
+                                            }
+                                        });
+
+                                    }
+                                });
+                        },"image/png" , 0);
+
+                    }
+                });
+            });
+        }
+
+
+
+
+
 
     });
 </script>

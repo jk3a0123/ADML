@@ -6,20 +6,32 @@ var fs = require("fs");
 
 var rules = (function () {
 
-  function baserule(callback) {
-    var input = fs.createReadStream('c:/zzz/rule_example.csv');
-    var area = req.query.area;
-    var gender = req.query.gender;
-    var age = req.query.age;
-    var emotion = req.query.emotion;
-    // console.log(!area);
-    var csvRows;
-    var rulesArr = new Array();
+  function baserule(obj , callback) {
+    var adList = fs.createReadStream('/Users/juyoungjung/Downloads/list.csv');
+    // var input = fs.createReadStream('/Users/juyoungjung/Downloads/rule_example.csv');
+    var area = obj.area;
+    var age = obj.age;
+    var gender = obj.gender;
+    var emotion = "happiness";
 
     console.log(area);
-    console.log(gender);
     console.log(age);
+    console.log(gender);
     console.log(emotion);
+
+    var csvRows;
+    var rulesArr = new Array();
+    var adlistRows;
+    // var adlistcol;
+    var row;
+
+    // adList.on('data' , function (data) {
+    //     adlistRows = data.toString('utf8');
+    //     row = adlistRows.split('\r\n');
+    //     console.log(row);
+    //     var adlistcol = row[0].split(',');
+    //
+    // });
 
     input.on('data', function (data) {
       csvRows = data.toString('utf8');
@@ -54,10 +66,24 @@ var rules = (function () {
         }
         return flag;
       });
-      console.log(result);
-      callback({data: result, params: area + gender + age + emotion});
+      console.log("result called....");
+      console.log(result[0].ad);
+
+
+
+
+
+      console.log("result end...");
+      callback({data: result, par: area + gender + age + emotion , adno : result[0].ad});
     });
   }
+
+
+
+
+
+
+
 
   function kmeansrule(callback) {
     var input = fs.createReadStream('c:/zzz/kmeans_example.csv');
@@ -126,4 +152,5 @@ var rules = (function () {
   }
 
   return {baserule : baserule, kmeansrule : kmeansrule};
-});
+})();
+module.exports = rules;
