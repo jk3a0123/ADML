@@ -26,7 +26,7 @@ var fileIO = (function () {
     }
 
     function logWrite(log) {
-        var data = "\"ino\"," + "\"1\"," +""+log.detect.age+"," + ""+log.detect.gender+"," +""+log.adno+"," +""+log.watchTime+"," +""+log.currentTime+"," +
+        var data = "\"ino\"," + "\"1\"," +""+Math.round(log.detect.age)+"," + ""+log.detect.gender+"," +""+log.adno+"," +""+log.watchTime+"," +""+log.currentTime+"," +
             ""+log.befEmotion.happiness+"," + ""+log.befEmotion.anger+"," +""+log.befEmotion.sadness+"," +""+log.befEmotion.neutral+"," +""+log.befEmotion.surprise+"," +
             ""+log.befEmotion.fear+","+ ""+log.befEmotion.contempt+","+""+log.befEmotion.disgust+","+""+log.aftEmotion.happiness+","+""+log.aftEmotion.anger+","+
             ""+log.aftEmotion.sadness+","+""+log.aftEmotion.neutral+","+ ""+log.aftEmotion.surprise+","+ ""+log.aftEmotion.fear+","+""+log.aftEmotion.contempt+","+

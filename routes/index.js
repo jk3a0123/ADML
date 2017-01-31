@@ -18,12 +18,11 @@ router.get('/sendlog', function(req, res, next) {
 router.get('/logwrite' , function (req , res , next) {
 
     var log = { detect : req.query.detect,
-                befEmotion : req.query.firstEmotion,
-                aftEmotion : req.query.secondEmotion,
+                befEmotion : req.query.befEmotion,
+                aftEmotion : req.query.aftEmotion,
                 adno : "1",
                 watchTime : Math.round(req.query.watchTime) ,
-                currentTime : req.query.currentTime,
-                };
+                currentTime : req.query.currentTime};
    fileIO.logWrite(log);
 });
 
@@ -43,6 +42,10 @@ router.get('/receivebase' , function (req , res , next) {
 router.get('/receivekmeans' , function (req , res , next) {
     var obj = {url:"kmeans"};
     ajaxMD.recevieFile(obj);
+});
+
+router.get('/adfile' , function (req , res) {
+    fileIO.adFileImgRead(result => res.send(result));
 });
 
 

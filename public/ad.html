@@ -15,7 +15,6 @@
     <script src="stylesheets/main.css"></script>
     <script src="javascripts/face-min.js"></script>
     <script type="text/javascript" src="javascripts/face-api.js"></script>
-    <script type="text/javascript" src="javascripts/rule-base.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="javascripts/front.to.node-ajax.js"></script>
 
@@ -75,6 +74,7 @@
         var currentTime ;
         var endTime ;
         var makeTime;
+        var time;
 
 
         firstPicture();
@@ -92,7 +92,7 @@
                  context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
                  console.log(rect.width);
                  if(rect.width > 200 && event.data.length ==1){
-                     var time = new Date();
+                     time = new Date();
                      makeTime = time.getFullYear() + "-" + ("0" + time.getMonth()+1).slice(-2) + "-" + ("0"+ time.getDate()).slice(-2) + " " +
                          ("0" + time.getHours()).slice(-2) + ":" + ("0" + time.getMinutes()).slice(-2) + ":" + ("0" + time.getSeconds()).slice(-2);
                      tracker.removeAllListeners();
@@ -117,7 +117,6 @@
                                      var currentAge = Math.floor(detect.age/10)*10;
                                      $("#log").html("연령대 :" + currentAge +
                                          " 성별 :"+ detect.gender + " 행복감 :" + firstemotion.happiness);
-
                                      var newtime = new Date();
                                      currentTime = newtime.setTime(newtime.getTime() - time.getTime());
                                      endTime = currentTime/1000;
@@ -127,7 +126,8 @@
                                                  "emotion" : firstemotion};
                                      ruleBase(path , function (result) {
                                          if(result=="end"){
-                                             return firstPicture();
+                                             console.log("secondCalled.....");
+                                             return secondPicture();
                                          }
                                      });
 
@@ -140,7 +140,6 @@
              });
          });
      }
-
 
 
 
@@ -169,17 +168,12 @@
                                         currentTime = newtime.setTime(newtime.getTime() - time.getTime());
                                         endTime = currentTime/1000;
                                         console.log(endTime);
-                                        var path = {"detect" : detect,
-                                            "emotion" : secondEmotion ,
-                                            "currentTime" : makeTime ,
-                                            "watchTime" : endTime };
-
-                                        ruleBase(path , function (result) {
-                                            if(result=="end"){
-                                                return firstPicture();
-                                            }
-                                        });
-
+                                        var obj = { "detect" : detect,
+                                                    "befEmotion" : firstemotion,
+                                                    "aftEmotion" : secondEmotion ,
+                                                    "currentTime" : makeTime ,
+                                                    "watchTime" : endTime };
+                                        logWrite(obj);
                                     }
                                 });
                         },"image/png" , 0);
@@ -188,12 +182,6 @@
                 });
             });
         }
-
-
-
-
-
-
     });
 </script>
 </body>

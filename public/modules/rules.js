@@ -7,8 +7,8 @@ var fs = require("fs");
 var rules = (function () {
 
   function baserule(obj , callback) {
-    var adList = fs.createReadStream('/Users/juyoungjung/Downloads/list.csv');
-    // var input = fs.createReadStream('/Users/juyoungjung/Downloads/rule_example.csv');
+    // var adList = fs.createReadStream('/Users/juyoungjung/Downloads/list.csv');
+    var input = fs.createReadStream('/Users/juyoungjung/Downloads/rule_example.csv');
     var area = obj.area;
     var age = obj.age;
     var gender = obj.gender;

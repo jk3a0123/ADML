@@ -10,6 +10,7 @@ var fileIO = require("../public/modules/fileio.js");
 var ajaxMD = require("../public/modules/node.to.backend.js");
 
 router.get('/rule', function(req, res) {
+    console.log("rule called...");
     //req.query.area
     var obj = {"area" : "KJ" , "gender" : req.query.gender , "age" : req.query.age , "emotion" : req.query.firstemotion};
     rules.baserule(obj  , function (result) {

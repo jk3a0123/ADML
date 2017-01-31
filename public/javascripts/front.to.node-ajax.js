@@ -19,10 +19,10 @@ function callimg() {
         }
     })
 }
-function writeLog(obj) {
+function logWrite(obj) {
 
     $.ajax({
-        url : "http://localhost:8080/write",
+        url : "http://localhost:8080/logwrite",
         data : obj,
         success : function () {
             console.log("success write log.....");
