@@ -103,45 +103,41 @@
                          detectapi(blob , function (data) {
                              console.log("detected called........");
                              detect = data;
-                             console.log(detect);
-                             if(firstemotion == null){
-                                 return firstPicture();
-                             }
                          });
-                         setTimeout(function () {
-                             emotionapi(blob , function (data) {
-                                 console.log("emotion called.......");
-                                 firstemotion = data;
-                                 console.log(firstemotion);
-                                 if(firstemotion != null){
-                                     var currentAge = Math.floor(detect.age/10)*10;
-                                     $("#log").html("연령대 :" + currentAge +
-                                         " 성별 :"+ detect.gender + " 행복감 :" + firstemotion.happiness);
-                                     var newtime = new Date();
-                                     currentTime = newtime.setTime(newtime.getTime() - time.getTime());
-                                     endTime = currentTime/1000;
-                                     console.log(endTime);
-                                     var path = {"age" : currentAge ,
-                                                 "gender" : detect.gender ,
-                                                 "emotion" : firstemotion};
-                                     ruleBase(path , function (result) {
-                                         if(result=="end"){
-                                             console.log("secondCalled.....");
-                                             return secondPicture();
-                                         }
-                                     });
+                         emotionapi(blob , function (data) {
+                             console.log("emotion called.......");
+                             firstemotion = data;
+                             console.log(firstemotion);
+                             var currentAge = Math.floor(detect.age/10)*10;
+                             $("#log").html("연령대 :" + currentAge +
+                                            "성별 :"+ detect.gender +
+                                            "행복감 :" + firstemotion.happiness);
 
-                                 }
+                             var newtime = new Date();
+                             currentTime = newtime.setTime(newtime.getTime() - time.getTime());
+                             endTime = currentTime/1000;
+                             console.log(endTime);
                              });
-                         },4000);
                      },"image/png" , 0);
-
                  }
              });
          });
      }
 
-
+    var t = setInterval(function () {
+         console.log("interval checked...");
+         if(detect != null && firstemotion != null){
+             console.log("interval called!!");
+             clearInterval(t);
+             var obj = {"detect" : detect,
+                        "emotion" : firstemotion};
+             ruleBase(obj , function (time) {
+                 setTimeout(function () {
+                     return secondPicture();
+                 }, time)
+             });
+         }
+    },400);
 
      // twoPicture....
         function secondPicture() {

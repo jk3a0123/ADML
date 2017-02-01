@@ -45,10 +45,10 @@ function callVideo(path) {
 
 }
 
-function ruleBase(path , callback) {
+function ruleBase(obj , callback) {
     $.ajax({
         url : "http://localhost:8080/rules/rule" ,
-        data : path,
+        data : obj,
         type : "get",
         success : function (result) {
             console.log("success base");
@@ -62,10 +62,8 @@ function ruleBase(path , callback) {
                     timer = seconds.duration;
                     console.log("duration......");
                     console.log(timer);
-                        setTimeout(function () {
-                            callback("end");
-                            clearInterval(t);
-                        }, timer);
+                    callback(timer);
+                    clearInterval(t);
 
                 }
             }, 500);

@@ -10,7 +10,7 @@ var rules = (function () {
     // var adList = fs.createReadStream('/Users/juyoungjung/Downloads/list.csv');
     var input = fs.createReadStream('/Users/juyoungjung/Downloads/rule_example.csv');
     var area = obj.area;
-    var age = obj.age;
+    var age = Math.floor(obj.age/10)*10;
     var gender = obj.gender;
     var emotion = "happiness";
 
@@ -66,11 +66,8 @@ var rules = (function () {
         }
         return flag;
       });
-      console.log("result called....");
-      console.log(result[0].ad);
-
       console.log("result end...");
-      callback({data: result, par: area + gender + age + emotion , adno : result[0].ad});
+      callback({data: result, par: area + gender + age + emotion});
     });
   }
 
