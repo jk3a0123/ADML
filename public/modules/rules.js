@@ -69,19 +69,10 @@ var rules = (function () {
       console.log("result called....");
       console.log(result[0].ad);
 
-
-
-
-
       console.log("result end...");
       callback({data: result, par: area + gender + age + emotion , adno : result[0].ad});
     });
   }
-
-
-
-
-
 
 
 

@@ -53,12 +53,25 @@ function ruleBase(path , callback) {
         success : function (result) {
             console.log("success base");
             $('#img').css('visibility' , 'hidden');
-            $('#advideo').attr('src' , "data:video/mp4;base64," +result);
-            var timer = $('#advideo')[0].duration;
-            console.log($('#advideo'));
-            setTimeout(function () {
-                callback("end");
-            }, timer);
+            var video = $('#advideo');
+            var timer;
+            video.attr('src' , "data:video/mp4;base64," +result);
+            var seconds = video[0];
+            var t = setInterval(function () {
+                if(seconds.readyState > 0) {
+                    timer = seconds.duration;
+                    console.log("duration......");
+                    console.log(timer);
+                        setTimeout(function () {
+                            callback("end");
+                            clearInterval(t);
+                        }, timer);
+
+                }
+            }, 500);
+
+
+
 
         }
     })

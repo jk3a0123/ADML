@@ -37,14 +37,6 @@ var ajaxMD = (function () {
             });
         });
     }
-
-
-
-
-
-
-
-
     return {sendLog :  sendLog , recevieFile : recevieFile};
 })();
 
