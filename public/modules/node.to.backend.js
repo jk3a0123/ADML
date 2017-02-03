@@ -33,11 +33,14 @@ var ajaxMD = (function () {
                 dataType : "text",
                 succeess : function (data) {
                     console.log("success");
+                    console.log(data);
                 }
             });
         });
     }
     return {sendLog :  sendLog , recevieFile : recevieFile};
+
+
 })();
 
 module.exports = ajaxMD;

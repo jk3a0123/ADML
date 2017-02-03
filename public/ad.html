@@ -20,10 +20,11 @@
 
     <title>Welcome kb141 ad</title>
     <style>
-        #video , canvas {
+        #video, canvas {
             position: absolute;
             margin-top: 50px;
         }
+
         #advideo {
             position: absolute;
         }
@@ -38,27 +39,25 @@
         <div class="col-md-4">
             <h1 id="log"></h1>
         </div>
-    <div class="row">
-        <div class="col-md-4">
-            <video  autoplay preload width="1080" height="720" id="advideo"></video>
-            <img id="img" width=600" height="600px">
-        </div>
-        <div class="col-md-4">
+        <div class="row">
+            <div class="col-md-4">
+                <video autoplay preload width="1080" height="720" id="advideo"></video>
+                <img id="img" width=600" height="600px">
+            </div>
+            <div class="col-md-4">
 
+            </div>
+            <div class="col-md-4">
+                <video id="video" width="480" height="360" preload autoplay loop muted></video>
+                <canvas id="canvas" width="480" height="360"></canvas>
+            </div>
         </div>
-        <div class="col-md-4">
-            <video id="video" width="480" height="360" preload autoplay loop muted ></video>
-            <canvas id="canvas" width="480" height="360"></canvas>
-        </div>
-    </div>
-
 
 
     </div>
 </div>
 <script>
-$(document).ready(function () {
-        callimg();
+    $(document).ready(function () {
         var video = document.getElementById("video");
         var canvas = document.getElementById("canvas");
         var context = canvas.getContext("2d");
@@ -66,84 +65,87 @@ $(document).ready(function () {
         tracker.setInitialScale(2);
         tracker.setStepSize(2);
         tracker.setEdgesDensity(0.1);
-        tracking.track("#video" , tracker , { camera: true });
+        tracking.track("#video", tracker, {camera: true});
 
-        var detect ;
-        var firstemotion ;
-        var secondEmotion;
-        var currentTime ;
-        var endTime ;
+        var currentTime;
+        var endTime;
         var makeTime;
         var time;
 
+        var faceResult = null;
+        var firstEmotionResult = null;
+        var secondEmotionResult = null;
 
-        firstPicture();
+        $("#stats").css("display", "none");
+
+//        var path = {
+//            "age": 50,
+//            "gender": "female",
+//            "firstemotion": {
+//                "anger": 0.00019452213,
+//                "contempt": 0.000333736039,
+//                "disgust": 0.000693641952,
+//                "fear": 0.0000172743637,
+//                "happiness": 0.0000509745,
+//                "neutral": 0.004753512,
+//                "sadness": 0.0001063,
+//                "surprise": 0.00008960857
+//            }
+//        };
+//
+        modeImage();
+//
+//
+//        var newint = setInterval(function () {
+//            clearInterval(newint);
+//            modeVideo(path);
+//        }, 5000);
+
 
 // firstpicture func......
-    function firstPicture() {
-         tracker.on("track" , function (event) {
-             context.clearRect(0,0,canvas.width , canvas.height);
-             event.data.forEach(function (rect) {
-                 context.strokeStyle = "#FF4941";
-                 context.strokeRect(rect.x, rect.y, rect.width, rect.height);
-                 context.font = '11px Helvetica';
-                 context.fillStyle = "#fff";
-                 context.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
-                 context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
-                 console.log(rect.width);
-                 if(rect.width > 200 && event.data.length ==1){
-                     time = new Date();
-                     makeTime = time.getFullYear() + "-" + ("0" + time.getMonth()+1).slice(-2) + "-" + ("0"+ time.getDate()).slice(-2) + " " +
-                         ("0" + time.getHours()).slice(-2) + ":" + ("0" + time.getMinutes()).slice(-2) + ":" + ("0" + time.getSeconds()).slice(-2);
-                     tracker.removeAllListeners();
-                     console.log("makeTime.....");
-                     console.log(makeTime);
-                     context.drawImage(video , 0 , 0 , 480 , 360);
-                     canvas.toBlob(function (blob) {
-                         detectapi(blob , function (data) {
-                             console.log("detected called........");
-                             detect = data;
-                         });
-                         emotionapi(blob , function (data) {
-                             console.log("emotion called.......");
-                             firstemotion = data;
-                             console.log(firstemotion);
-                             var currentAge = Math.floor(detect.age/10)*10;
-                             $("#log").html("연령대 :" + currentAge +
-                                            "성별 :"+ detect.gender +
-                                            "행복감 :" + firstemotion.happiness);
 
-                             var newtime = new Date();
-                             currentTime = newtime.setTime(newtime.getTime() - time.getTime());
-                             endTime = currentTime/1000;
-                             console.log(endTime);
-                             });
-                     },"image/png" , 0);
-                 }
-             });
-         });
-    }
+        function modeImage() {
+            cameraTrackingOn();
+            if(!imgData) {
+                $.ajax({
+                    url: "http://localhost:8080/adfile",
+                    dataType: "json",
+                    success: function (data) {
+                        imgData = data;
+                        callImg();
+                    }
+                });
+            } else {
+                callImg();
+            }
+        }
 
-    // checked api data
-    var t = setInterval(function () {
-         console.log("interval checked...");
-         if(detect != null && firstemotion != null){
-             console.log("interval called!!");
-             clearInterval(t);
-             var obj = {"detect" : detect,
-                        "emotion" : firstemotion};
-             ruleBase(obj , function (time) {
-                 setTimeout(function () {
-                     return secondPicture();
-                 }, time)
-             });
-         }
-    },400);
+        function modeVideo(path) {
+            console.log("MODE VIDEO CALLED");
+            clearTimeout(slideShow);
+            ruleMachines(path, secondCounter);
+        }
 
-     // twoPicture....
-    function secondPicture() {
-            tracker.on("track" , function (event) {
-                context.clearRect(0,0,canvas.width , canvas.height);
+        function secondCounter(seconds) {
+            console.log("SECOND COUNTER PARAM : " + seconds);
+            var i = setTimeout(function () {
+
+                // 영상이 끝나고 해야 할 일들.
+
+                console.log("MOVIE IS END");
+                $('#img').css('visibility', 'visible');
+                $('#advideo').css('visibility', 'hidden');
+
+                modeImage();
+
+                clearTimeout(i);
+
+            }, seconds * 1000);
+        }
+
+        function cameraTrackingOn() {
+            tracker.on("track", function (event) {
+                context.clearRect(0, 0, canvas.width, canvas.height);
                 event.data.forEach(function (rect) {
                     context.strokeStyle = "#FF4941";
                     context.strokeRect(rect.x, rect.y, rect.width, rect.height);
@@ -152,34 +154,114 @@ $(document).ready(function () {
                     context.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
                     context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
                     console.log(rect.width);
-                    if(event.data.length ==1){
-                        tracker.removeAllListeners();
-                        context.drawImage(video , 0 , 0 , 480 , 360);
-                        canvas.toBlob(function (blob) {
-                                emotionapi(blob , function (data) {
-                                    console.log("emotion call  ed.......");
-                                    secondEmotion = data;
-                                    console.log(secondEmotion);
-                                    if(secondEmotion != null){
-                                        var newtime = new Date();
-                                        currentTime = newtime.setTime(newtime.getTime() - time.getTime());
-                                        endTime = currentTime/1000;
-                                        console.log(endTime);
-                                        var obj = { "detect" : detect,
-                                                    "befEmotion" : firstemotion,
-                                                    "aftEmotion" : secondEmotion ,
-                                                    "currentTime" : makeTime ,
-                                                    "watchTime" : endTime };
-                                        logWrite(obj);
-                                    }
-                                });
-                        },"image/png" , 0);
-
+                    if (rect.width > 190 && event.data.length == 1) {
+                        faceDetected();
                     }
                 });
             });
-    }
-});
+        }
+
+        function faceDetected() {
+            tracker.removeAllListeners();  // camera Tracking off
+
+            // log 준비
+            console.log("makeTime.....");
+            context.drawImage(video, 0, 0, 480, 360);
+            time = new Date();
+            makeTime = time.getFullYear() + "-" + ("0" + time.getMonth() + 1).slice(-2) + "-" + ("0" + time.getDate()).slice(-2) + " " +
+                ("0" + time.getHours()).slice(-2) + ":" + ("0" + time.getMinutes()).slice(-2) + ":" + ("0" + time.getSeconds()).slice(-2);
+            console.log(makeTime);
+
+            canvas.toBlob(function (blob) {
+                faceAPI(blob, function (data) {
+                    console.log("detected called........");
+                    faceResult = data;
+                });
+                emotionAPI(blob, function (data) {
+                    console.log("emotion called.......");
+                    firstEmotionResult = data;
+                    console.log(firstEmotionResult);
+                });
+            }, "image/png", 0);
+
+
+            var intervalCount = 0;
+            var apiInterval = setInterval(function () {
+                if (firstEmotionResult && faceResult) {
+                    clearInterval(apiInterval);
+
+                    var currentAge = Math.floor(faceResult.age);
+
+                    $("#log").html("연령 :" + currentAge +
+                        "성별 :" + faceResult.gender +
+                        "감정 :" + firstEmotionResult.happiness);
+
+                    var newtime = new Date();
+                    currentTime = newtime.setTime(newtime.getTime() - time.getTime());
+                    endTime = currentTime / 1000;
+                    console.log(endTime);
+                    console.log("INTERVAL COUNT : " + intervalCount);
+
+                    var path = {
+                        "age" : currentAge,
+                        "gender" : faceResult.gender,
+                        "firstemotion" : firstEmotionResult
+                    }
+
+                    var waitTerm = setInterval(function () {
+                        modeVideo(path);
+                        clearInterval(waitTerm);
+                    }, 1000);
+                }
+                intervalCount++;
+            }, 200);
+        }
+
+
+//    twoPicture....
+//        function secondPicture() {
+//            tracker.on("track", function (event) {
+//                context.clearRect(0, 0, canvas.width, canvas.height);
+//                event.data.forEach(function (rect) {
+//                    context.strokeStyle = "#FF4941";
+//                    context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+//                    context.font = '11px Helvetica';
+//                    context.fillStyle = "#fff";
+//                    context.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
+//                    context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
+//                    console.log(rect.width);
+//                    if (event.data.length == 1) {
+//                        tracker.removeAllListeners();
+//                        context.drawImage(video, 0, 0, 480, 360);
+//                        canvas.toBlob(function (blob) {
+//                            emotionapi(blob, function (data) {
+//                                console.log("emotion call  ed.......");
+//                                secondEmotion = data;
+//                                console.log(secondEmotion);
+//                                if (secondEmotion != null) {
+//                                    var newtime = new Date();
+//                                    currentTime = newtime.setTime(newtime.getTime() - time.getTime());
+//                                    endTime = currentTime / 1000;
+//                                    console.log(endTime);
+//                                    var obj = {
+//                                        "detect": detect,
+//                                        "befEmotion": firstemotion,
+//                                        "aftEmotion": secondEmotion,
+//                                        "currentTime": makeTime,
+//                                        "watchTime": endTime
+//                                    };
+//                                    logWrite(obj);
+//                                }
+//                            });
+//                        }, "image/png", 0);
+//
+//                    }
+//                });
+//            });
+//        }
+
+
+    });
 </script>
 </body>
 </html>

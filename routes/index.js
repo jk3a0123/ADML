@@ -18,11 +18,12 @@ router.get('/sendlog', function(req, res, next) {
 router.get('/logwrite' , function (req , res , next) {
 
     var log = { detect : req.query.detect,
-                befEmotion : req.query.befEmotion,
-                aftEmotion : req.query.aftEmotion,
+                befEmotion : req.query.firstEmotion,
+                aftEmotion : req.query.secondEmotion,
                 adno : "1",
                 watchTime : Math.round(req.query.watchTime) ,
-                currentTime : req.query.currentTime};
+                currentTime : req.query.currentTime,
+                };
    fileIO.logWrite(log);
 });
 
