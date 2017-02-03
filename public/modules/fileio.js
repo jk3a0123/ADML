@@ -46,12 +46,14 @@ var fileIO = (function () {
             // callback return emotion insert
             var arr = row.join().split(",");
             console.log("..........");
+            console.log(arr);
             var fileUri = new Array();
             var fileNames = new Array();
             var count = 1;
             var j = 0 ;
             var convert = setInterval(function () {
                 var files = arr[j+count].slice(1,-1);
+                console.log(files);
                 fileNames.push(files);
                 var data = fs.readFileSync("/Users/juyoungjung/Downloads/adimages/"+fileNames[j]).toString("base64");
                 fileUri.push(util.format("data:%s;base64,%s" , mime.lookup("/Users/juyoungjung/Downloads/adimages/"+fileNames[j]),data));

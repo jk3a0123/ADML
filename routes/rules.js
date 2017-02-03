@@ -12,9 +12,9 @@ var ajaxMD = require("../public/modules/node.to.backend.js");
 router.get('/rule', function(req, res) {
     console.log("rule called...");
     //req.query.area
-    var obj = {"area" : "KJ" , "gender" : req.query.gender , "age" : req.query.age , "emotion" : req.query.firstemotion};
+    var obj = {"area" : "KJ" , "gender" : req.query.detect.gender , "age" : req.query.detect.age , "emotion" : req.query.firstemotion};
     rules.baserule(obj  , function (result) {
-        console.log(result.data[0]);
+        console.log(result);
         console.log("............");
         console.log(result.par);
         res.writeHead(206 , {"Accept-Ranges" : "bytes" , "Content-Type" : "video/mp4" });

@@ -57,7 +57,7 @@
     </div>
 </div>
 <script>
-    $(document).ready(function () {
+$(document).ready(function () {
         callimg();
         var video = document.getElementById("video");
         var canvas = document.getElementById("canvas");
@@ -80,7 +80,7 @@
         firstPicture();
 
 // firstpicture func......
-     function firstPicture() {
+    function firstPicture() {
          tracker.on("track" , function (event) {
              context.clearRect(0,0,canvas.width , canvas.height);
              event.data.forEach(function (rect) {
@@ -122,8 +122,9 @@
                  }
              });
          });
-     }
+    }
 
+    // checked api data
     var t = setInterval(function () {
          console.log("interval checked...");
          if(detect != null && firstemotion != null){
@@ -140,7 +141,7 @@
     },400);
 
      // twoPicture....
-        function secondPicture() {
+    function secondPicture() {
             tracker.on("track" , function (event) {
                 context.clearRect(0,0,canvas.width , canvas.height);
                 event.data.forEach(function (rect) {
@@ -177,8 +178,8 @@
                     }
                 });
             });
-        }
-    });
+    }
+});
 </script>
 </body>
 </html>

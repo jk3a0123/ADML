@@ -48,7 +48,4 @@ router.get('/adfile' , function (req , res) {
     fileIO.adFileImgRead(result => res.send(result));
 });
 
-
-
-
 module.exports = router;
