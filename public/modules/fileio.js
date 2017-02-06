@@ -10,8 +10,8 @@ var fileIO = (function () {
     var result;
 
     function localLogRead(callback) {
-        // var input = fs.createReadStream("/Users/juyoungjung/Downloads/adlog.csv");
-        var input = fs.createReadStream("c:zzz/ad/adlog.csv");
+        var input = fs.createReadStream("/Users/juyoungjung/Downloads/adlog.csv");
+        // var input = fs.createReadStream("c:zzz/ad/adlog.csv");
         input.on('data', function (chunk) {
             result = chunk.toString();
             var obj = {"text": result};
@@ -25,8 +25,8 @@ var fileIO = (function () {
             "\"bef_happiness\"," + "\"bef_anger\"," + "\"bef_sadness\"," + "\"bef_neutral\"," + "\"bef_surprise\"," + "\"bef_fear\"," +
             "\"bef_contempt\"," + "\"bef_disgust\"," + "\"aft_happiness\"," + "\"aft_anger\"," + "\"aft_sadness\"," + "\"aft_neutral\"," +
             "\"aft_surprise\"," + "\"aft_fear\"," + "\"aft_contempt\"," + "\"aft_disqust\"," + "\"rule\"\n";
-        // fs.writeFileSync("/Users/juyoungjung/Downloads/adlog.csv" , data , 'utf8');
-        fs.writeFileSync("c:/zzz/ad/adlog.csv", data, 'utf8');
+        fs.writeFileSync("/Users/juyoungjung/Downloads/adlog.csv" , data , 'utf8');
+        // fs.writeFileSync("c:/zzz/ad/adlog.csv", data, 'utf8');
     }
 
     function logWrite(log) {
@@ -35,16 +35,16 @@ var fileIO = (function () {
             log.befEmotion.fear + "," + log.befEmotion.contempt + "," + log.befEmotion.disgust + "," + log.aftEmotion.happiness + "," + log.aftEmotion.anger + "," +
             log.aftEmotion.sadness + "," + log.aftEmotion.neutral + "," + log.aftEmotion.surprise + "," + log.aftEmotion.fear + "," + log.aftEmotion.contempt + "," +
             log.aftEmotion.disgust + "," + "\"base\"\n";
-        // fs.appendFile("/Users/juyoungjung/Downloads/adlog.csv" , data , 'utf8' , function (err) {
-        fs.appendFile("c:/zzz/ad/adlog.csv", data, 'utf8', function (err) {
+        fs.appendFile("/Users/juyoungjung/Downloads/adlog.csv" , data , 'utf8' , function (err) {
+        // fs.appendFile("c:/zzz/ad/adlog.csv", data, 'utf8', function (err) {
             console.log(err);
         });
 
     }
 
     function adFileImgRead(callback) {
-        // var adImgList = fs.readFileSync("/Users/juyoungjung/Downloads/list.csv");
-        var adImgList = fs.readFileSync("c:/zzz/ad/list.csv");
+        var adImgList = fs.readFileSync("/Users/juyoungjung/Downloads/list.csv");
+        // var adImgList = fs.readFileSync("c:/zzz/ad/list.csv");
 
         var csvRows = adImgList.toString('utf8');
         var csvRow = csvRows.split('\r\n');
@@ -66,10 +66,10 @@ var fileIO = (function () {
 
         var convert = setInterval(function () {
             // var files = arr[j+count].slice(1,-1);
-            // var data = fs.readFileSync("/Users/juyoungjung/Downloads/adimages/"+filesArr[i]["image"]).toString("base64");
-            // fileUri.push(util.format("data:%s;base64,%s" , mime.lookup("/Users/juyoungjung/Downloads/adimages/"+filesArr[i]["image"]),data));
-            var data = fs.readFileSync("c:/zzz/ad/" + filesArr[i]["image"]).toString("base64");
-            fileUri.push(util.format("data:%s;base64,%s", mime.lookup("c:/zzz/ad/" + filesArr[i]["image"]), data));
+            var data = fs.readFileSync("/Users/juyoungjung/Downloads/adimages/"+filesArr[i]["image"]).toString("base64");
+            fileUri.push(util.format("data:%s;base64,%s" , mime.lookup("/Users/juyoungjung/Downloads/adimages/"+filesArr[i]["image"]),data));
+            // var data = fs.readFileSync("c:/zzz/ad/" + filesArr[i]["image"]).toString("base64");
+            // fileUri.push(util.format("data:%s;base64,%s", mime.lookup("c:/zzz/ad/" + filesArr[i]["image"]), data));
 
             i++;
             if (i == filesArr.length) {
@@ -83,8 +83,8 @@ var fileIO = (function () {
     function adVideoRead(path, callback) {
         console.log("video called...");
         console.log(path);
-        // var stream = fs.createReadStream("/Users/juyoungjung/Downloads/ad/"+path , {encoding : "base64" , bytes : 102400 * 102400});
-        var stream = fs.createReadStream("c:/zzz/ad/" + path, {encoding: "base64", bytes: 102400 * 102400});
+        var stream = fs.createReadStream("/Users/juyoungjung/Downloads/ad/"+path , {encoding : "base64" , bytes : 102400 * 102400});
+        // var stream = fs.createReadStream("c:/zzz/ad/" + path, {encoding: "base64", bytes: 102400 * 102400});
         callback(stream);
     }
 

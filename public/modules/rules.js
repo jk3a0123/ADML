@@ -7,8 +7,8 @@ var fs = require("fs");
 var rules = (function () {
 
     function baserule(obj, callback) {
-        // var input = fs.createReadStream('/Users/juyoungjung/Downloads/rule_example.csv');
-        var input = fs.createReadStream('c:/zzz/ad/rule_example.csv');
+        var input = fs.createReadStream('/Users/juyoungjung/Downloads/rule_example.csv');
+        // var input = fs.createReadStream('c:/zzz/ad/rule_example.csv');
         var area = obj.area;
         var age = Math.floor(obj.age / 10) * 10;
         var gender = obj.gender;
@@ -62,8 +62,8 @@ var rules = (function () {
 
 
     function kmeansrule(obj, callback) {
-        // var input = fs.createReadStream('/Users/juyoungjung/Downloads/kmeans_example.csv');
-        var input = fs.createReadStream('c:/zzz/ad/kmeans_example.csv');
+        var input = fs.createReadStream('/Users/juyoungjung/Downloads/kmeans_example.csv');
+        // var input = fs.createReadStream('c:/zzz/ad/kmeans_example.csv');
         var gender = obj.gender;
         var age = obj.age;
         var emotion = obj.emotion;

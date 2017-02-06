@@ -23,7 +23,7 @@ function callImg() {
 function callVideo(path) {
 
     $.ajax({
-        url: "http://localhost:8080/advideo/" + path,
+        url: "http://localhost:8081/advideo/" + path,
         type: "get",
         dataType: "text",
         success: function (result) {
@@ -38,7 +38,7 @@ function callVideo(path) {
 // ============== 이미지를 넘기면 룰 돌림 ==============
 function ruleMachines(obj, callback) {
     $.ajax({
-        url: "http://localhost:8080/rules/ruleMachines",
+        url: "http://localhost:8081/rules/ruleMachines",
         data: obj,
         type: "get",
         success: function (result) {
@@ -66,7 +66,7 @@ function ruleMachines(obj, callback) {
 // ============== 로그 추가 ==============
 function logWrite(obj) {
     $.ajax({
-        url: "http://localhost:8080/logwrite",
+        url: "http://localhost:8081/logwrite",
         data: obj,
         success: function () {
             console.log("success write log.....");
