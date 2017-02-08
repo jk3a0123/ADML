@@ -22,7 +22,7 @@ router.get('/logwrite' , function (req , res , next) {
                 aftEmotion : req.query.secondEmotion,
                 adno : "1",
                 watchTime : Math.round(req.query.watchTime) ,
-                currentTime : req.query.currentTime,
+                currentTime : req.query.currentTime
                 };
    fileIO.logWrite(log);
 });
