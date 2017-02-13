@@ -25,9 +25,12 @@ var faceAPI = function (blob, callback) {
     })
         .done(function (data) {
             console.log(data);
-            var age = data[0].faceAttributes.age;
-            var gender = data[0].faceAttributes.gender;
-            var obj = {"age": age, "gender": gender};
+            var obj = "error";
+            if (typeof data[0] != "undefined") {
+                var age = data[0].faceAttributes.age;
+                var gender = data[0].faceAttributes.gender;
+                obj = {"age": age, "gender": gender};
+            }
             console.log(obj);
             callback(obj);
         })
@@ -52,8 +55,11 @@ var emotionAPI = function (blob, callback) {
         dataType: "JSON",
     })
         .done(function (data) {
-            console.log(data);
-            var result = data[0].scores;
+            console.log("EMOTION API : " + data);
+            var result = "error";
+            if (typeof data[0] != "undefined") {
+                result = data[0].scores;
+            }
             console.log(result);
             callback(result);
         })
