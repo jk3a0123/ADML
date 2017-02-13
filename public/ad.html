@@ -41,19 +41,54 @@
     <style>
         #video, canvas {
             position: absolute;
-            margin-top: 50px;
         }
 
         #advideo {
             position: absolute;
+            padding-right: 100px;
+            width: 100%;
         }
 
-        #log {
-            margin-top: 380px;
-            margin-left: 60px;
-            text-align: left;
-            width: 480px;
+        /*#log {*/
+        /*text-align: left;*/
+        /*}*/
+
+        .content {
+            margin-top: 30px;
         }
+
+        .ad {
+            padding-left: 50px;
+            padding-right: 50px;
+        }
+
+        .ad-wrapper {
+            width: 100%;
+            padding-top: 50px;
+            height: 500px;
+            background-color: black;
+        }
+
+        .head-line {
+            height: 60px;
+            background-color: #CB7679;
+        }
+
+        .camera {
+            position: static;
+            width: 480px;
+            height: 360px;
+            margin-bottom: 20px;
+        }
+
+        .logText {
+            position: static;
+        }
+
+        #log1 {
+            margin: auto;
+        }
+
     </style>
 
 
@@ -78,10 +113,12 @@
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1>
-                Blank page
-                <small>it all starts here</small>
-            </h1>
+            <div class="head-line">
+                <h1>
+                    Blank page
+                    <small>it all starts here</small>
+                </h1>
+            </div>
         </section>
 
         <!-- Main content -->
@@ -112,22 +149,33 @@
             <!--</div>-->
             <!--&lt;!&ndash; /.box &ndash;&gt;-->
             <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                    <video autoplay preload width="auto" height="600" id="advideo"></video>
-                    <img id="img" width="1180px" height="720px">
+                <div class="col-md-7 ad">
+                    <div class="ad-wrapper">
+                        <!--광고-->
+                        <video autoplay preload width="100%" height="400px" id="advideo"></video>
+                        <!--이미지-->
+                        <img id="img" width="100%" height="400px">
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                    <video id="video" width="480" height="360" preload autoplay loop muted></video>
-                    <canvas id="canvas" width="480" height="360"></canvas>
+                <!--카메라-->
+                <div class="col-md-4">
+                    <div class="camera">
+                        <video id="video" width="480" height="360" preload autoplay loop muted></video>
+                        <canvas id="canvas" width="480" height="360"></canvas>
+                    </div>
+                    <div class="logText">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4 id="log1"></h4>
+                            </div>
+                            <div class="col-md-6">
+                                <h4 id="log2"></h4>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <br><br><br><br>
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                    <h4 id="log"></h4>
-                </div>
+
+                <!--로그-->
             </div>
         </section>
         <!-- /.content -->
@@ -147,7 +195,12 @@
 <!--<script src="../../dist/js/demo.js"></script>-->
 
 <script>
+
+
     $(document).ready(function () {
+        var h = window.innerHeight;
+
+
         var video = document.getElementById("video");
         var canvas = document.getElementById("canvas");
         var context = canvas.getContext("2d");
@@ -250,7 +303,7 @@
                     context.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
                     context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
                     console.log(rect.width);
-                    if (rect.width > 190 && event.data.length == 1) {
+                    if (rect.width > 180 && event.data.length == 1) {
                         faceDetected(step);
                     }
                 });
@@ -316,7 +369,7 @@
             context.drawImage(video, 0, 0, 480, 360);
             time = new Date();
             makeTime = time.getFullYear() + "-" + ("0" + time.getMonth() + 1).slice(-2) + "-" + ("0" + time.getDate()).slice(-2) + " " +
-                ("0" + time.getHours()).slice(-2) + ":" + ("0" + time.getMinutes()).slice(-2) + ":" + ("0" + time.getSeconds()).slice(-2);
+                    ("0" + time.getHours()).slice(-2) + ":" + ("0" + time.getMinutes()).slice(-2) + ":" + ("0" + time.getSeconds()).slice(-2);
             console.log(makeTime);
 
             canvas.toBlob(function (blob) {
@@ -358,16 +411,16 @@
                             clearInterval(apiInterval);
                             var currentAge = Math.floor(faceResult.age);
 
-                            $("#log").html("첫번째" + "<br>" +
-                                "연령 :" + faceResult.age + "<br>" +
-                                "성별 :" + faceResult.gender + "<br>" +
-                                "행복 :" + firstEmotionResult.happiness + "<br>" +
-                                "경멸 :" + firstEmotionResult.anger + "<br>" +
-                                "혐오 :" + firstEmotionResult.disgust + "<br>" +
-                                "공포 :" + firstEmotionResult.fear + "<br>" +
-                                "평온 :" + firstEmotionResult.neutral + "<br>" +
-                                "슬픔 :" + firstEmotionResult.sadness + "<br>" +
-                                "놀람 :" + firstEmotionResult.surprise + "<br>");
+                            $("#log1").html("첫번째" + "<br>" +
+                                    "연령 :" + faceResult.age + "<br>" +
+                                    "성별 :" + faceResult.gender + "<br>" +
+                                    "행복 :" + firstEmotionResult.happiness + "<br>" +
+                                    "경멸 :" + firstEmotionResult.anger + "<br>" +
+                                    "혐오 :" + firstEmotionResult.disgust + "<br>" +
+                                    "공포 :" + firstEmotionResult.fear + "<br>" +
+                                    "평온 :" + firstEmotionResult.neutral + "<br>" +
+                                    "슬픔 :" + firstEmotionResult.sadness + "<br>" +
+                                    "놀람 :" + firstEmotionResult.surprise + "<br>");
 
                             var newtime = new Date();
                             currentTime = newtime.setTime(newtime.getTime() - time.getTime());
@@ -393,14 +446,14 @@
                 var apiInterval = setInterval(function () {
                     if (secondEmotionResult) {
                         clearInterval(apiInterval);
-                        $("#log").append(
-                            "행복 2 :" + secondEmotionResult.happiness + "<br>" +
-                            "경멸 2 :" + secondEmotionResult.anger + "<br>" +
-                            "혐오 2 :" + secondEmotionResult.disgust + "<br>" +
-                            "공포 2 :" + secondEmotionResult.fear + "<br>" +
-                            "평온 2 :" + secondEmotionResult.neutral + "<br>" +
-                            "슬픔 2 :" + secondEmotionResult.sadness + "<br>" +
-                            "놀람 2 :" + secondEmotionResult.surprise + "<br>");
+                        $("#log2").append(
+                                "행복 2 :" + secondEmotionResult.happiness + "<br>" +
+                                "경멸 2 :" + secondEmotionResult.anger + "<br>" +
+                                "혐오 2 :" + secondEmotionResult.disgust + "<br>" +
+                                "공포 2 :" + secondEmotionResult.fear + "<br>" +
+                                "평온 2 :" + secondEmotionResult.neutral + "<br>" +
+                                "슬픔 2 :" + secondEmotionResult.sadness + "<br>" +
+                                "놀람 2 :" + secondEmotionResult.surprise + "<br>");
 //                        var newtime = new Date();
 //                        currentTime = newtime.setTime(newtime.getTime() - time.getTime());
 //                        endTime = currentTime / 1000;
