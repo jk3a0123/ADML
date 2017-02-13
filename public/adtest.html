@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <script src="javascripts/tracking-min.js"></script>
+    <script src="javascripts/tracking.js"></script>
+    <script src="javascripts/jquery.js"></script>
+    <script src="javascripts/respond.min.js"></script>
+    <script src="javascripts/stats.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <script src="stylesheets/main.css"></script>
+    <script src="javascripts/face-min.js"></script>
+    <script type="text/javascript" src="javascripts/face-api.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/front.to.node.js"></script>
+
+    <title>Welcome kb141 ad</title>
+    <style>
+        #video, canvas {
+            position: absolute;
+            margin-top: 50px;
+        }
+
+        #advideo {
+            position: absolute;
+        }
+
+        #log {
+            margin-top: 380px;
+            margin-left: 60px;
+            text-align: left;
+            width: 480px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <video id="video" width="480" height="360" preload autoplay loop muted></video>
+                    <canvas id="canvas" width="480" height="360"></canvas>
+                </div>
+            </div>
+            <br><br><br><br>
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <h4 id="log"></h4>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var video = document.getElementById("video");
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext("2d");
+        var tracker = new tracking.ObjectTracker("face");
+        tracker.setInitialScale(2);
+        tracker.setStepSize(2);
+        tracker.setEdgesDensity(0.1);
+        tracking.track("#video", tracker, {camera: true});
+
+        var currentTime;
+        var endTime;
+        var makeTime;
+        var time;
+
+        var faceResult = null;
+        var firstEmotionResult = null;
+        var secondEmotionResult = null;
+
+        $("#stats").css("display", "none");
+
+        cameraTrackingOn("first");
+
+        function cameraTrackingOn(step) {
+            tracker.on("track", function (event) {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                event.data.forEach(function (rect) {
+                    context.strokeStyle = "#FF4941";
+                    context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+                    context.font = '11px Helvetica';
+                    context.fillStyle = "#fff";
+                    context.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
+                    context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
+                    console.log(rect.width);
+                    if (rect.width > 190 && event.data.length == 1) {
+                        faceDetected(step);
+                    }
+                });
+            });
+        }
+
+
+        function faceDetected(step) {
+            tracker.removeAllListeners();  // camera Tracking off
+
+            // log 준비
+            console.log("makeTime.....");
+            context.drawImage(video, 0, 0, 480, 360);
+            time = new Date();
+            makeTime = time.getFullYear() + "-" + ("0" + time.getMonth() + 1).slice(-2) + "-" + ("0" + time.getDate()).slice(-2) + " " +
+                ("0" + time.getHours()).slice(-2) + ":" + ("0" + time.getMinutes()).slice(-2) + ":" + ("0" + time.getSeconds()).slice(-2);
+            console.log(makeTime);
+
+            canvas.toBlob(function (blob) {
+                if (step == "first") {
+                    faceResult = null;
+                    firstEmotionResult = null;
+                    faceAPI(blob, function (data) {
+                        console.log("detected called........");
+                        faceResult = data;
+                    });
+
+                    emotionAPI(blob, function (data) {
+                        console.log("emotion called.......");
+                        firstEmotionResult = data;
+//                    console.log(firstEmotionResult);
+                    });
+                } else if (step == "second") {
+                    secondEmotionResult = null;
+                    emotionAPI(blob, function (data) {
+                        console.log("emotion called.......");
+                        secondEmotionResult = data;
+                        console.log("SECOND EMOTION : " + secondEmotionResult);
+                    });
+                }
+                faceVerify(step);
+            }, "image/png", 0);
+        }
+
+        function faceVerify(step) {
+            var intervalCount = 0;
+
+            var apiInterval = setInterval(function () {
+                if (firstEmotionResult && faceResult) {
+                    if (firstEmotionResult == 'error' || faceResult == 'error') {
+                        clearInterval(apiInterval);
+                        cameraTrackingOn("first");
+                    } else {
+                        clearInterval(apiInterval);
+
+                        var currkey;
+                        var currvalue = 0;
+
+                        for (key in firstEmotionResult) {
+                            if (currvalue < firstEmotionResult[key]) {
+                                currkey = key;
+                                currvalue = firstEmotionResult[key];
+                            }
+                        }
+
+                        var koreanEmotion;
+
+                        switch (currkey) {
+                            case "happiness":
+                                koreanEmotion = "행복 가득한";
+                                break;
+                            case "anger":
+                                koreanEmotion = "분노에 찬";
+                                break;
+                            case "disgust":
+                                koreanEmotion = "역겨워하는";
+                                break;
+                            case "fear" :
+                                koreanEmotion = "두려움에 떠는";
+                                break;
+                            case "neutral" :
+                                koreanEmotion = "평온한";
+                                break;
+                            case "sadness" :
+                                koreanEmotion = "슬픔에 젖은";
+                                break;
+                            case "surprise" :
+                                koreanEmotion = "깜짝 놀란";
+                                break;
+                            case "contempt" :
+                                koreanEmotion = "경멸하는 눈빛의";
+                                break;
+                            default :
+
+                        }
+
+                        logText = "당신은 " + koreanEmotion + " " + faceResult.age + " 세의 " + (faceResult.gender == "male" ? "남성" : "여성") + "으로 보입니다.";
+
+
+                        $("#log").html(
+                            logText + "<br><br>" +
+                            "연령 : " + faceResult.age + "<br>" +
+                            "성별 : " + faceResult.gender + "<br>" +
+                            "행복 : " + firstEmotionResult.happiness + "<br>" +
+                            "분노 : " + firstEmotionResult.anger + "<br>" +
+                            "경멸 : " + firstEmotionResult.contempt + "<br>" +
+                            "혐오 : " + firstEmotionResult.disgust + "<br>" +
+                            "공포 : " + firstEmotionResult.fear + "<br>" +
+                            "평온 : " + firstEmotionResult.neutral + "<br>" +
+                            "슬픔 : " + firstEmotionResult.sadness + "<br>" +
+                            "놀람 : " + firstEmotionResult.surprise + "<br>");
+
+
+                        var newtime = new Date();
+                        currentTime = newtime.setTime(newtime.getTime() - time.getTime());
+                        endTime = currentTime / 1000;
+                        console.log(endTime);
+                        console.log("INTERVAL COUNT : " + intervalCount);
+
+                        cameraTrackingOn("first");
+                    }
+                }
+                intervalCount++;
+            }, 200);
+        }
+
+    });
+</script>
+</body>
+</html>
