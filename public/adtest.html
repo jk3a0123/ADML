@@ -88,6 +88,8 @@
         var makeTime;
         var time;
 
+        var cameraSquare = 190;
+
         var faceResult = null;
         var firstEmotionResult = null;
         var secondEmotionResult = null;
@@ -107,7 +109,7 @@
                     context.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
                     context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
                     console.log(rect.width);
-                    if (rect.width > 180 && event.data.length == 1) {
+                    if (rect.width > cameraSquare && event.data.length == 1) {
                         faceDetected(step);
                     }
                 });
