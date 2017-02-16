@@ -10,8 +10,8 @@ var fileIO = (function () {
     var result;
 
     function localLogRead(callback) {
-        var input = fs.createReadStream("/Users/juyoungjung/Downloads/adlog.csv");
-        // var input = fs.createReadStream("c:zzz/ad/adlog.csv");
+        // var input = fs.createReadStream("/Users/juyoungjung/Downloads/adlog.csv");
+        var input = fs.createReadStream("c:zzz/ad/adlog.csv");
         input.on('data', function (chunk) {
             result = chunk.toString();
             var obj = {"text": result};
@@ -43,8 +43,8 @@ var fileIO = (function () {
     }
 
     function adFileImgRead(callback) {
-        var adImgList = fs.readFileSync("/Users/juyoungjung/Downloads/list.csv");
-        // var adImgList = fs.readFileSync("c:/zzz/ad/list.csv");
+        // var adImgList = fs.readFileSync("/Users/juyoungjung/Downloads/list.csv");
+        var adImgList = fs.readFileSync("c:/zzz/ad/list.csv");
 
         var csvRows = adImgList.toString('utf8');
         var csvRow = csvRows.split('\r\n');
@@ -66,10 +66,10 @@ var fileIO = (function () {
 
         var convert = setInterval(function () {
             // var files = arr[j+count].slice(1,-1);
-            var data = fs.readFileSync("/Users/juyoungjung/Downloads/adimages/"+filesArr[i]["image"]).toString("base64");
-            fileUri.push(util.format("data:%s;base64,%s" , mime.lookup("/Users/juyoungjung/Downloads/adimages/"+filesArr[i]["image"]),data));
-            // var data = fs.readFileSync("c:/zzz/ad/" + filesArr[i]["image"]).toString("base64");
-            // fileUri.push(util.format("data:%s;base64,%s", mime.lookup("c:/zzz/ad/" + filesArr[i]["image"]), data));
+            // var data = fs.readFileSync("/Users/juyoungjung/Downloads/adimages/"+filesArr[i]["image"]).toString("base64");
+            // fileUri.push(util.format("data:%s;base64,%s" , mime.lookup("/Users/juyoungjung/Downloads/adimages/"+filesArr[i]["image"]),data));
+            var data = fs.readFileSync("c:/zzz/ad/" + filesArr[i]["image"]).toString("base64");
+            fileUri.push(util.format("data:%s;base64,%s", mime.lookup("c:/zzz/ad/" + filesArr[i]["image"]), data));
 
             i++;
             if (i == filesArr.length) {
@@ -83,8 +83,8 @@ var fileIO = (function () {
     function adVideoRead(path, callback) {
         console.log("video called...");
         console.log(path);
-        var stream = fs.createReadStream("/Users/juyoungjung/Downloads/ad/"+path , {encoding : "base64" , bytes : 102400 * 102400});
-        // var stream = fs.createReadStream("c:/zzz/ad/" + path, {encoding: "base64", bytes: 102400 * 102400});
+        // var stream = fs.createReadStream("/Users/juyoungjung/Downloads/ad/"+path , {encoding : "base64" , bytes : 102400 * 102400});
+        var stream = fs.createReadStream("c:/zzz/ad/" + path, {encoding: "base64", bytes: 102400 * 102400});
         callback(stream);
     }
 

@@ -7,8 +7,8 @@ var fs = require("fs");
 var rules = (function () {
 
     function baserule(obj, callback) {
-        var input = fs.createReadStream('/Users/juyoungjung/Downloads/rule_example.csv');
-        // var input = fs.createReadStream('c:/zzz/ad/rule_example.csv');
+        // var input = fs.createReadStream('/Users/juyoungjung/Downloads/rule_example.csv');
+        var input = fs.createReadStream('c:/zzz/ad/rule_example.csv');
         var area = obj.area;
         var age = Math.floor(obj.age / 10) * 10;
         var gender = obj.gender;
@@ -56,14 +56,14 @@ var rules = (function () {
 
             console.log(result.length == 0 ? "BASE 룰 없음" : "BASE 룰 있음 = " + result[0].ad);
 
-            callback({data: result, par: area + gender + age + emotion});
+            callback({data: result[0], par: area + gender + age + emotion});
         });
     }
 
 
     function kmeansrule(obj, callback) {
-        var input = fs.createReadStream('/Users/juyoungjung/Downloads/kmeans_example.csv');
-        // var input = fs.createReadStream('c:/zzz/ad/kmeans_example.csv');
+        // var input = fs.createReadStream('/Users/juyoungjung/Downloads/kmeans_example.csv');
+        var input = fs.createReadStream('c:/zzz/ad/kmeans_example.csv');
         var gender = obj.gender;
         var age = obj.age;
         var emotion = obj.emotion;
@@ -136,7 +136,7 @@ var rules = (function () {
 
         var interval = setInterval(function () {
             if (baseResult != 1 && kmeansResult != 1) {
-                if (!baseResult) {
+                if (baseResult != null) {
                     console.log("BASE RULE RETURN");
                     result = baseResult;
                 } else {

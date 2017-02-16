@@ -21,6 +21,13 @@ router.get('/', function(req, res, next) {
     res.render('ad.html', { title: 'Express' });
 });
 
+router.get('/test', function(req, res, next) {
+    // fileIO.localWrite();
+    res.render('adtest.html', { title: 'Express' });
+});
+
+
+
 router.get('/sendlog', function(req, res, next) {
     fileIO.localLogRead(obj => ajaxMD.sendLog(obj));
 });
