@@ -10,13 +10,18 @@ var http = require('http');
 var express = require('express');
 var fileIO = require('./../public/modules/fileio.js');
 var web = express();
+var cookieParser = require('cookie-parser');
+var csrf = require('csurf');
+var crypto = require('crypto');
 
 /**
  * Get port from environment and store in Express.
  */
 
 var port = normalizePort(process.env.PORT || '8081');
-app.set('port', port);
+
+
+
 web.use("/public" , express.static(__dirname + "/public"));
 
 /**
