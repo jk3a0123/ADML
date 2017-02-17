@@ -11,8 +11,8 @@ var express = require('express');
 var fileIO = require('./../public/modules/fileio.js');
 var web = express();
 var cookieParser = require('cookie-parser');
-var csrf = require('csurf');
-var crypto = require('crypto');
+// var csrf = require('csurf');
+// var crypto = require('crypto');
 
 /**
  * Get port from environment and store in Express.

@@ -6,13 +6,13 @@ var fs = require("fs");
 var ajaxMD = require("../public/modules/node.to.backend.js");
 var path = require('path');
 var jsdom = require("jsdom");
-var ajax = require('ajax');
+// var ajax = require('ajax');
 var request = require('request');
-var csrf = require('csurf');
-var jwt = require('jwt-simple');
-var FormData = require('form-data');
+// var csrf = require('csurf');
+// var jwt = require('jwt-simple');
+// var FormData = require('form-data');
 
-var querystring = require('querystring');
+// var querystring = require('querystring');
 
 
 /* GET home page. */
