@@ -25,9 +25,8 @@ router.get('/sendlog', function(req, res, next) {
 router.get('/logwrite' , function (req , res , next) {
 
     var log = { detect : req.query.detect,
-                befEmotion : req.query.firstEmotion,
-                aftEmotion : req.query.secondEmotion,
-                adno : "1",
+                befEmotion : req.query.befEmotion,
+                aftEmotion : req.query.aftEmotion,
                 watchTime : Math.round(req.query.watchTime) ,
                 currentTime : req.query.currentTime
                 };

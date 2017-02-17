@@ -42,13 +42,14 @@ function ruleMachines(obj, callback) {
         data: obj,
         type: "get",
         success: function (result) {
+            // console.log(result);
             $('#img').css('visibility', 'hidden');
             $('#advideo').css('visibility', 'visible');
 
             var videos = $('#advideo');
             videos.attr('src', "data:video/mp4;base64," + result);
-
             var video = videos[0];
+            // console.log(video);
             var seconds;
             var i = setInterval(function () {
                 if (video.readyState > 0) {

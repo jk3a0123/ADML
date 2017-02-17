@@ -456,17 +456,28 @@
                     if (secondEmotionResult) {
                         clearInterval(apiInterval);
                         $("#log2").html("두번째" +
-                            "<br><br>행복 2 :" + secondEmotionResult.happiness + "<br>" +
+                            "행복 2 :" + secondEmotionResult.happiness + "<br>" +
                             "경멸 2 :" + secondEmotionResult.anger + "<br>" +
                             "혐오 2 :" + secondEmotionResult.disgust + "<br>" +
                             "공포 2 :" + secondEmotionResult.fear + "<br>" +
                             "평온 2 :" + secondEmotionResult.neutral + "<br>" +
                             "슬픔 2 :" + secondEmotionResult.sadness + "<br>" +
                             "놀람 2 :" + secondEmotionResult.surprise + "<br>");
-//                        var newtime = new Date();
-//                        currentTime = newtime.setTime(newtime.getTime() - time.getTime());
-//                        endTime = currentTime / 1000;
-//                        console.log(endTime);
+                        var newtime = new Date();
+                        currentTime = newtime.setTime(newtime.getTime() - time.getTime());
+                        endTime = currentTime / 1000;
+                        console.log(endTime);
+
+                        var obj = {
+                            "detect": faceResult,
+                            "befEmotion": firstEmotionResult,
+                            "aftEmotion": secondEmotionResult,
+                            "currentTime": makeTime,
+                            "watchTime": endTime
+                        };
+
+                        logWrite(obj);
+
                         console.log("INTERVAL COUNT : " + intervalCount);
                     }
                     intervalCount++;
