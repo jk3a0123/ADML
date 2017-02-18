@@ -7,39 +7,46 @@ var util = require("util");
 var mime = require("mime");
 
 var fileIO = (function () {
-    var result;
 
-    function localLogRead(callback) {
-        var input = fs.createReadStream("/Users/juyoungjung/Downloads/adlog.csv");
-        // var input = fs.createReadStream("c:zzz/ad/adlog.csv");
-        input.on('data', function (chunk) {
-            result = chunk.toString();
-            var obj = {"text": result};
-            console.log(obj);
-            callback(obj);
-        });
+    var adName = null;
+    var ruleName = null;
+
+    function setAdNameRuleName(obj) {
+        adName = obj.adName;
+        ruleName = obj.ruleName;
     }
+
+    // function localLogRead(callback) {
+    //     // var input = fs.createReadStream("/Users/juyoungjung/Downloads/adlog.csv");
+    //     var input = fs.createReadStream("c:zzz/ad/adlog.csv");
+    //     input.on('data', function (chunk) {
+    //         result = chunk.toString();
+    //         var obj = {"text": result};
+    //         console.log(obj);
+    //         callback(obj);
+    //     });
+    // }
 
     function localWrite() { // 컬럼명 지정할 때. file 없으면 새로 만들기.
         var data = "\"ino\"," + "\"dno\"," + "\"age\"," + "\"gender\"," + "\"adno\"," + "\"watch_time\"," + "\"curr_time\"," +
             "\"bef_happiness\"," + "\"bef_anger\"," + "\"bef_sadness\"," + "\"bef_neutral\"," + "\"bef_surprise\"," + "\"bef_fear\"," +
             "\"bef_contempt\"," + "\"bef_disgust\"," + "\"aft_happiness\"," + "\"aft_anger\"," + "\"aft_sadness\"," + "\"aft_neutral\"," +
             "\"aft_surprise\"," + "\"aft_fear\"," + "\"aft_contempt\"," + "\"aft_disqust\"," + "\"rule\"\n";
-        fs.writeFileSync("/Users/juyoungjung/Downloads/adlog.csv" , data , 'utf8');
-        // fs.writeFileSync("c:/zzz/ad/adlog.csv", data, 'utf8');
+        // fs.writeFileSync("/Users/juyoungjung/Downloads/adlog.csv" , data , 'utf8');
+        fs.writeFileSync("c:/zzz/ad/adlog7.csv", data, 'utf8');
     }
 
     function logWrite(log) {
-        var data = "\"ino\"," + "\"1\"," + Math.round(log.detect.age) + "," + log.detect.gender + "," + log.adno + "," + log.watchTime + "," + log.currentTime + "," +
+        // "\"1\","
+        var data = "\"ino\"," + "\"1\"," + Math.round(log.detect.age) + "," + log.detect.gender + "," + adName + "," + log.watchTime + "," + log.currentTime + "," +
             log.befEmotion.happiness + "," + log.befEmotion.anger + "," + log.befEmotion.sadness + "," + log.befEmotion.neutral + "," + log.befEmotion.surprise + "," +
             log.befEmotion.fear + "," + log.befEmotion.contempt + "," + log.befEmotion.disgust + "," + log.aftEmotion.happiness + "," + log.aftEmotion.anger + "," +
             log.aftEmotion.sadness + "," + log.aftEmotion.neutral + "," + log.aftEmotion.surprise + "," + log.aftEmotion.fear + "," + log.aftEmotion.contempt + "," +
-            log.aftEmotion.disgust + "," + "\"base\"\n";
-        fs.appendFile("/Users/juyoungjung/Downloads/adlog.csv" , data , 'utf8' , function (err) {
-        // fs.appendFile("c:/zzz/ad/adlog.csv", data, 'utf8', function (err) {
+            log.aftEmotion.disgust + "," + ruleName + "\n";
+        // fs.appendFile("/Users/juyoungjung/Downloads/adlog.csv" , data , 'utf8' , function (err) {
+        fs.appendFile("c:/zzz/ad/adlog7.csv", data, 'utf8', function (err) {
             console.log(err);
         });
-
     }
 
     function adFileImgRead(callback) {
@@ -55,15 +62,33 @@ var fileIO = (function () {
             var rule = {};
             var row = csvRow[i].split(',');
             for (var j = 0; j < columns.length; j++) {
-                rule[columns[j].slice(1,-1)] = row[j].slice(1,-1); // 따옴표
+                // rule[columns[j].slice(1, -1)] = row[j].slice(1, -1); // 따옴표
+                rule[columns[j]] = row[j]; // 안 따옴표
             }
             filesArr.push(rule);
             console.log(rule);
         }
 
+        // 여기에 파일 체크하는 거 있어야 합니다.
+        // for 문 돌면서 없는 파일은 firebase에서 다운받아야 합니다.
+        for (var j = 0; j < filesArr.length; j++) {
+            for (var k = 1 ; k < 3 ; k++)
+            if(fs.existsSync("c:/zzz/ad/" + filesArr[j][columns[k]]) == false) {
+                var missingFile = filesArr[j][columns[k]];
+                console.log(missingFile + " is null");
+
+                // 없는 파일의 이름은 missingFile 입니다.
+                // 여기서 저 파일명에 해당하는 파일을 firebase에서 다운 받아야 합니다.
+
+
+            }
+        }
+
+
+
+
         var i = 0;
         var fileUri = new Array();
-
         var convert = setInterval(function () {
             // var files = arr[j+count].slice(1,-1);
             // var data = fs.readFileSync("/Users/juyoungjung/Downloads/adimages/"+filesArr[i]["image"]).toString("base64");
@@ -86,11 +111,14 @@ var fileIO = (function () {
         // var stream = fs.createReadStream("/Users/juyoungjung/Downloads/ad/"+path , {encoding : "base64" , bytes : 102400 * 102400});
         var stream = fs.createReadStream("c:/zzz/ad/" + path, {encoding: "base64", bytes: 102400 * 102400});
         callback(stream);
+
+
     }
 
 
     return {
-        localLogRead: localLogRead,
+        // localLogRead: localLogRead,
+        setAdNameRuleName: setAdNameRuleName,
         localWrite: localWrite,
         logWrite: logWrite,
         adFileImgRead: adFileImgRead,

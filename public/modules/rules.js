@@ -126,6 +126,7 @@ var rules = (function () {
         var baseResult = 1;
         var kmeansResult = 1;
         var result;
+        var ruleName;
         baserule(obj, function (data) {
             baseResult = data;
         });
@@ -136,17 +137,32 @@ var rules = (function () {
 
         var interval = setInterval(function () {
             if (baseResult != 1 && kmeansResult != 1) {
-                if (baseResult != null) {
+                // if (baseResult != null) {
+                //     console.log("BASE RULE RETURN");
+                //     result = baseResult;
+                //     ruleName = "BASE";
+                // } else {
+                //     console.log("KMEANS RULE RETURN");
+                //     result = kmeansResult;
+                //     ruleName = "KMEANS";
+                // }
+
+                if (Math.random() > 0.5) {
                     console.log("BASE RULE RETURN");
                     result = baseResult;
+                    ruleName = "BASE";
                 } else {
                     console.log("KMEANS RULE RETURN");
                     result = kmeansResult;
+                    ruleName = "KMEANS";
                 }
+
             }
             console.log("MACHINE RESULT : " + result);
             clearInterval(interval);
-            callback(result);
+
+            callback({result: result, ruleName: ruleName});
+
         }, 500);
 
     }
