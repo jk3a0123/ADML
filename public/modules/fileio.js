@@ -10,8 +10,8 @@ var fileIO = (function () {
     var result;
 
     function localLogRead(callback) {
-        // var input = fs.createReadStream("/Users/juyoungjung/Downloads/adlog.csv");
-        var input = fs.createReadStream("c:zzz/ad/adlog.csv");
+        var input = fs.createReadStream("/Users/juyoungjung/Downloads/adlog.csv");
+        // var input = fs.createReadStream("c:zzz/ad/adlog.csv");
         input.on('data', function (chunk) {
             result = chunk.toString();
             var obj = {"text": result};
