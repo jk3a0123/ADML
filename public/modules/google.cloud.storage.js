@@ -1,7 +1,4 @@
-// google cloud storage
-// 1. firebase get download json file my key
-// 2. set projectID and keyFilename
-// 3. google cloud platpom
+
 var fs = require('fs');
 var gcs = require('@google-cloud/storage')({
     projectId:"kb141-17d6a",
