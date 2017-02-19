@@ -5,15 +5,31 @@
 var fs = require("fs");
 var util = require("util");
 var mime = require("mime");
+var gcs = require('@google-cloud/storage')({
+    projectId: "kb141-17d6a",
+    // keyFilename: "/Users/juyoungjung/Downloads/KB141-ee115063fbe4.json"
+    keyFilename: "c:/zzz/ad/KB141-ee115063fbe4.json"
+});
 
 var fileIO = (function () {
 
     var adName = null;
     var ruleName = null;
+    var bucket = gcs.bucket("kb141-17d6a.appspot.com/AD_File");
 
     function setAdNameRuleName(obj) {
         adName = obj.adName;
         ruleName = obj.ruleName;
+    }
+
+
+
+    function firebaseDownload(fileName) {
+        console.log(fileName);
+        var stream = bucket.file(fileName).createReadStream();
+        // var localWrite = fs.createWriteStream('/Users/juyoungjung/Documents/' + fileName);
+        var localWrite = fs.createWriteStream('c:/zzz/ad/' + fileName);
+        stream.pipe(localWrite);
     }
 
     // function localLogRead(callback) {
@@ -76,10 +92,7 @@ var fileIO = (function () {
             if(fs.existsSync("c:/zzz/ad/" + filesArr[j][columns[k]]) == false) {
                 var missingFile = filesArr[j][columns[k]];
                 console.log(missingFile + " is null");
-
-                // 없는 파일의 이름은 missingFile 입니다.
-                // 여기서 저 파일명에 해당하는 파일을 firebase에서 다운 받아야 합니다.
-
+                firebaseDownload(missingFile);
 
             }
         }
@@ -116,13 +129,16 @@ var fileIO = (function () {
     }
 
 
+
+
     return {
         // localLogRead: localLogRead,
+        firebaseDownload: firebaseDownload,
         setAdNameRuleName: setAdNameRuleName,
         localWrite: localWrite,
         logWrite: logWrite,
         adFileImgRead: adFileImgRead,
-        adVideoRead: adVideoRead
+        adVideoRead: adVideoRead,
     };
 })();
 module.exports = fileIO;
